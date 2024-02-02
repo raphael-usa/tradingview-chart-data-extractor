@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    // "moduleResolution": "bundler",
+    // "allowSyntheticDefaultImports": true  !TODO
+  },
+  "include": [
+    "vite.config.ts",
+    // "src/manifest.ts",
+    // "src/manifest_firefox_v3.ts",
+    "package.json"
+  ]
+}
