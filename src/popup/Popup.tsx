@@ -12,23 +12,19 @@ export const Popup = () => {
 
   const add = () => setCount(count + 1)
 
-  // useEffect(() => {
-  //   // chrome.storage.sync.get(['count'], (result) => {
-  //   //   setCount(result.count || 0)
-  //   // })
-  // }, [])
+  useEffect(() => {
+    chrome.storage.sync.get(['count'], (result) => {
+      setCount(result.count || 0)
+    })
+  }, [])
 
   useEffect(() => {
-    // chrome.storage.sync.set({ count })
+    chrome.storage.sync.set({ count })
     chrome.runtime.sendMessage({ type: 'COUNT', count })
   }, [count])
 
   return (
     <main>
-      <h1><a href="options.html" target="_blank">Options Page(extension settings/options)</a></h1>
-      <h1><a href="home.html" target="_blank">Home Page(react-router demo)</a></h1>
-      <h1><a href="popup.html" target="_blank">Popup Page(counter)</a></h1>
-      <hr />
       <h3>Popup Page</h3>
       <div className="calc">
         <button onClick={minus} disabled={count <= 0}>

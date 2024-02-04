@@ -5,7 +5,7 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -19,25 +19,3 @@
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
-
-// !TODO look into these options
-// {
-//   "compilerOptions": {
-//     "target": "ESNext",
-//     "useDefineForClassFields": true,
-//     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-//     "allowJs": false,
-//     "skipLibCheck": true,
-//     "esModuleInterop": false,
-//     "allowSyntheticDefaultImports": true,
-//     "strict": true,
-//     "module": "ESNext",
-//     "moduleResolution": "bundler",
-//     "resolveJsonModule": true,
-//     "isolatedModules": true,
-//     "noEmit": true,
-//     "jsx": "react-jsx",
-//     "types": ["vitest/globals"]
-//   },
-//   "references": [{ "path": "./tsconfig.node.json" }]
-// }
