@@ -12,7 +12,12 @@ Content script parses and logs messages to console.
 $ npm run watch
 ```
 
-----
+
+
+------
+------
+
+# below, old readme from create-chrome-ext
 
 # typescript-version
 
