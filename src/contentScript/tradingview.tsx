@@ -7,97 +7,21 @@ import { createRoot } from 'react-dom/client';
 
 import { xbrowser } from '../utils/browser';
 
-function formatCurrentTime() {
-    const now = new Date();
-
-    // Extracting components of the time
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
-
-    // Formatting the time into "hour:min:sec" format
-    const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
-
-    return formattedTime;
-}
-
-// Helper function to pad single-digit numbers with a leading zero
-function padZero(number: number) {
-    return number < 10 ? `0${number}` : number;
-}
-
-function handleMessageFromDOM(data?: any) {
-    try {
-        let message = data.message;
-        let resultArray = message.split(/~m~/);
-        let filteredArray = resultArray.filter((value: string | string[] | undefined) => value !== undefined && value !== '' && (value.includes('{') || value.includes(':')));
-
-        // console.log({ filteredArray, resultArray });
-
-        var timeNow = formatCurrentTime();
-
-        filteredArray.forEach(myFunction);
-
-        function myFunction(value: string, index: any) {
-            try {
-                let item = JSON.parse(value);
-                let m = item.m;
-
-                if (m) {
-                    switch (m) {
-                        case "timescale_update":
-                            console.log(timeNow, ">>> timescale_update", { item })
-                            break;
-                        case "series_completed":
-                            console.log(timeNow, ">>> series_completed", { item })
-                            break;
-                        case "quote_completed":
-                            let ticker = item.p[1];
-                            console.log(timeNow, ">>> quote_completed > ", { ticker, item });
-                            break;
-
-                        case "du":
-                            let p1 = item.p[1];
-                            let sds_1 = p1['sds_1'];
-                            if (sds_1) {
-                                let test = sds_1['s'][0]['v'];
-                                console.log(timeNow, ">>> DUUUU > ", { p1, item, test });
-                            }
-                            else{
-                                console.log(timeNow, ">>> DU OTHER > ", { p1, item });
-                            }
-
-                            break;
-                        default:
-                            console.log(timeNow, "xxx not handled: ", { m, item });
-                    }
-                }
-                else {
-                    console.log(timeNow, '%c XXXX no m prop: ', 'background: blue; color: #bada55', { item });
-                }
-
-            } catch (error) {
-                console.error(timeNow, "in filteredArray.forEach(myFunction) error: ", { error, value });
-                alert(error);
-            }
-
-        }
-    } catch (error) {
-        console.error("handleMessageFromDOM error: ", { error, data });
-        alert(error);
-    }
-
-
-    // console.log('Message received from DOM:', message);
-
-    // Perform actions based on the message
-}
 
 // Listen for messages from the webpage DOM
 window.addEventListener('message', (event) => {
     // Ensure the message is from a trusted source (e.g., check event.origin)
-    if (event.source === window && event.data) {
-        handleMessageFromDOM(event.data);
+    if (event.source === window && event.data && event.data.type === "DOM_TO_TRADINGVIEW_CONTENT_SCRIPT") {
+        let message = event.data.message;
+        // handleMessageFromDOM(event.data);
+        // console.log({DOM_TO_TRADINGVIEW_CONTENT_SCRIPT: event.data});
+
+        xbrowser.runtime.sendMessage({ type: "TRADINGVIEW_CS_TO_BACKGROUND", message }, (response?: any) => {
+            if (response) {
+                console.log({ response });
+            }
+        });
+        
     }
 });
 

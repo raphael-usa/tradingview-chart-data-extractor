@@ -34,3 +34,17 @@ export function formatCurrentTime() {
 function padZero(number) {
   return number < 10 ? `0${number}` : number;
 }
+
+export function formatCurrentTimeHMS() {
+  const now = new Date();
+
+  // Extracting components of the time
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const seconds = now.getSeconds();
+
+  // Formatting the time into "hour:min:sec" format
+  const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+
+  return formattedTime;
+}

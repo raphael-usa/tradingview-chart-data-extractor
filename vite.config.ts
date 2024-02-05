@@ -33,6 +33,10 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: true,
       outDir: 'build',
       rollupOptions: {
+        input: {
+          // htmls in manifest are handled in crx() plugin.
+          home: 'home.html', // custom HTML page
+        },
         output: {
           chunkFileNames: 'assets/chunk-[hash].js',
         },
@@ -47,7 +51,7 @@ export default defineConfig(({ mode }) => {
           version: pkg.version,
           manifest_version: 2,
           background: {
-            scripts: ['src/background/index.ts'],
+            scripts: ['src/background/background.ts'],
             persistent: true,
           },
           icons: {
@@ -69,6 +73,11 @@ export default defineConfig(({ mode }) => {
               js: ['src/contentScript/tradingview.tsx'],
               run_at: 'document_start'
             },
+            {
+              matches: ["<all_urls>"],
+              js: ['src/contentScript/localhost.js'],
+              run_at: 'document_start'
+            },
           ],
           content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self'",
           web_accessible_resources: ['img/logo-16.png', 'img/logo-34.png', 'img/logo-48.png', 'img/logo-128.png', 'assets/*', 'src/*'],
@@ -81,7 +90,8 @@ export default defineConfig(({ mode }) => {
             "http://localhost:3000/*",
             "storage",
             "activeTab",
-            "webNavigation"
+            "webNavigation",
+            "<all_urls>"
           ],
         },
       }),
