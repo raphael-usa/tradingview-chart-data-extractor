@@ -1,4 +1,3 @@
-export const newWebSocketScript = `
 const delay = (milliseconds) => {
     return new Promise((resolve) => {
         setTimeout(resolve, milliseconds);
@@ -498,4 +497,3 @@ const delay = (milliseconds) => {
     // await delay(3000);
     // alert("works");
 })();
-`;

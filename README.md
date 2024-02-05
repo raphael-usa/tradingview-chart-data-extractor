@@ -1,20 +1,31 @@
-## Developing
+## In development
 
 extension only works on firefox. manifest v2, webRequest.onBeforeRequest.addListener browser API.
 
-intercepts response to HTTP GET request to "https://www.tradingview.com/chart/?symbol=*". Then modifies <script> code, related to WebSocket creation, in the response DOC.
+intercepts response to HTTP GET request to "https://www.tradingview.com/chart/?symbol=*". Then modifies <script> code, related to WebSocket creation, in the response HTML DOC.
 
-Tradingview websocket messages are sent to content script with window.postMessage.
+---
+
+**How Tradingview websocket messages are sent** 
+
+WebSocket messages -> 
+
+content script(tradingview.tsx) ->
+
+extension background.tsx ->
+
+react app content script (localhost.js) ->
+
+react app dom
+
 Content script parses and logs messages to console.
-  
 
 ```shell
-$ npm run watch
+$ ###
 ```
 
-
-
 ------
+
 ------
 
 # below, old readme from create-chrome-ext
@@ -26,18 +37,23 @@ $ npm run watch
 ## Installing
 
 1. Check if your `Node.js` version is >= **14**.
+
 2. Change or configurate the name of your extension on `src/manifest`.
+
 3. Run `npm install` to install the dependencies.
 
 ### Chrome Extension Developer Mode
 
 1. set your Chrome browser 'Developer mode' up
+
 2. click 'Load unpacked', and select `typescript-version/build` folder
 
 ### Nomal FrontEnd Developer Mode
 
 1. access `http://0.0.0.0:3000/`
+
 2. when debugging popup page, open `http://0.0.0.0:3000//popup.html`
+
 3. when debugging options page, open `http://0.0.0.0:3000//options.html`
 
 ## Packing
