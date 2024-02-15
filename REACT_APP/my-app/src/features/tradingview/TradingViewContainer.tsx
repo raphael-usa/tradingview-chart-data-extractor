@@ -190,6 +190,7 @@ function ChartsInfo() {
     full_name?: string;
     candleData?: any; // Assuming posts is an array of strings
     duUpdates?: any;
+    interval?: any;
   }
   const [chart_objs, setChart_objs] = useState<ChartObj[]>([]);
 
@@ -255,18 +256,22 @@ function ChartsInfo() {
 
   return (
     <div>
-      <h2>ChartsInfo</h2>
+      <h2 style={{textDecorationLine:"underline"}}>ChartsInfo <button>Do something to all tickers</button></h2>
       {chart_objs.length !== 0 && (
         chart_objs.map((chartObj) => (
           <div key={chartObj.key}>
             <h4>Name: {chartObj.full_name}</h4>
+            <span><button>do something to ticker data</button></span>
+            <h4>Interval: {chartObj.interval}</h4>
             <h4>key: {chartObj.key}</h4>
-            <ul>
-              {/* {chartObj.candleData.map((post, index) => (
-                <li key={index}>{post}</li>
-              ))} */}
-              {JSON.stringify(chartObj.duUpdates)}
+            <ul style={{textAlign:"left"}}> candleData: array of lists: [[],[], ...]. <br/>
+              num of lists: {chartObj.candleData.length}
+              {chartObj.candleData.map((post?:any, index?:any) => (
+                <li key={index}>length of list: {post.length}  1st item in list: {JSON.stringify(post[0])}</li>
+              ))}
+              
             </ul>
+            {JSON.stringify(chartObj.duUpdates)}
             <hr />
           </div>
         ))
