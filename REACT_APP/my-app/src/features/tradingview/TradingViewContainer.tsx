@@ -261,12 +261,14 @@ function ChartsInfo() {
           <div key={chartObj.key}>
             <h4>Name: {chartObj.full_name}</h4>
             <h4>key: {chartObj.key}</h4>
-            <ul>
-              {/* {chartObj.candleData.map((post, index) => (
-                <li key={index}>{post}</li>
-              ))} */}
-              {JSON.stringify(chartObj.duUpdates)}
+            <ul style={{textAlign:"left"}}> candleData: array of lists: [[],[], ...]. <br/>
+              num of lists: {chartObj.candleData.length}
+              {chartObj.candleData.map((post?:any, index?:any) => (
+                <li key={index}>length of list: {post.length}  1st item in list: {JSON.stringify(post[0])}</li>
+              ))}
+              
             </ul>
+            {JSON.stringify(chartObj.duUpdates)}
             <hr />
           </div>
         ))
