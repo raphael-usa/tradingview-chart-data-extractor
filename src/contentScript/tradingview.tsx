@@ -108,6 +108,11 @@ const TradingViewContentScript = () => {
         });
     };
 
+    const disconnectWS = () => {
+        console.log("send disconnectWS message to window");
+        window.postMessage({ type: "DISCONNECT_WS_FROM_TV_CS" }, '*');
+    };
+
     useEffect(() => {
         console.log("TradingViewContentScript useEffect");
 
@@ -121,7 +126,8 @@ const TradingViewContentScript = () => {
                 <div style={{ maxWidth: '400px' }}>
                     <h1>Hello TradingViewContentScript</h1>
                     <hr />
-                    <button onClick={injectJS}>background.js inject js to page</button>
+
+                    <button onClick={disconnectWS}><h3>Disconnect WebSocket</h3></button>
                     {/* <span>messageTestResponse: {messageTestResponse}</span>
                     <hr />
                     <button onClick={getAppStateFull}>getFullAppState</button>

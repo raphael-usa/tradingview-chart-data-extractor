@@ -152,7 +152,7 @@ xbrowser.webRequest.onBeforeRequest.addListener(
       filter.disconnect();
     };
   },
-  { urls: ["https://www.tradingview.com/chart/?symbol=*"] },
+  { urls: ["https://www.tradingview.com/chart/?symbol=*", "https://www.tradingview.com/chart/*/?symbol=*"] },
   ["blocking"]
 );
 
