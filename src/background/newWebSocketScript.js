@@ -6,7 +6,7 @@ const delay = (milliseconds) => {
 };
 (async () => {
     "use strict";
-    console.log(">>> WORKS, NEW WEBSOCKETSCRIPT, delay 5 seconds...");
+    console.log(">>> WORKS, NEW WEBSOCKETSCRIPT");
 
     function e(e, t = !1) {
         const {
@@ -45,7 +45,7 @@ const delay = (milliseconds) => {
                 /*console.debug("------ connect, _socket.onmessage ? e: ", {e});*/
                 try {
                     let messageLength = e.data.length;
-                    window.postMessage({ type:"DOM_TO_TRADINGVIEW_CONTENT_SCRIPT", message: {dataLength: e.data.length, data: e.data} }, '*');
+                    window.postMessage({ type: "DOM_TO_TRADINGVIEW_CONTENT_SCRIPT", message: { dataLength: e.data.length, data: e.data, isSend: false } }, '*');
                 } catch (error) {
                     console.error(">>>connect() onmessage WEBSOCKET ERROR: ", { error });
                 }
@@ -55,7 +55,13 @@ const delay = (milliseconds) => {
             }, this._socket.onclose = this._onClose.bind(this), this._socket.onerror = this._onError.bind(this)
         }
         send(e) {
-            this._socket && this._socket.send(this._encode(e))
+            try {
+                /*console.log("send ws e: ", {e});*/
+                window.postMessage({ type: "DOM_TO_TRADINGVIEW_CONTENT_SCRIPT", message: { data: e, isSend: true } }, '*');
+                this._socket && this._socket.send(this._encode(e));
+            } catch (error) {
+                console.error("WS error, send(e), error: ", error);
+            }
         }
         disconnect() {
             this._clearIdleTimeout(), this._socket && (this._socket.onmessage = t, this._socket.onclose = t, this._socket.onerror = t, this._socket.close())
@@ -486,7 +492,7 @@ const delay = (milliseconds) => {
             }), 1e4)
         }
     }
-    // await delay(5000);
+
     window.WSBackendConnection = new r(window.WEBSOCKET_HOST, {
         pingRequired: window.WS_HOST_PING_REQUIRED,
         proHost: window.WEBSOCKET_PRO_HOST,
@@ -495,7 +501,15 @@ const delay = (milliseconds) => {
         connectionType: window.WEBSOCKET_CONNECTION_TYPE
     }), window.WSBackendConnectionCtor = r;
 
-    // await delay(3000);
-    // alert("works");
+    const handleMessage = (event) => {
+        let message = event.data;
+        if (event.data.type == "DISCONNECT_WS_FROM_TV_CS") {
+            console.log("------->>>>>> WS SCRIPT handleMessage message: ", {message});
+            window.WSBackendConnection.disconnect();
+        }
+    };
+
+    window.addEventListener('message', handleMessage);
+
 })();
 `;

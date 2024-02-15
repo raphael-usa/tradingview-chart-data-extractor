@@ -3,11 +3,22 @@ import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
 
+import { Provider, useSelector } from 'react-redux';
+import { RootState } from './app/store';
+
+import TradingviewContainer from './features/tradingview/TradingViewContainer';
+
 function App() {
+  const counter = useSelector((state: RootState) => state.counter);
   return (
     <div className="App">
+
+      <TradingviewContainer />
+
+      <hr /> <hr /> <hr />
+      counter redux state: {JSON.stringify(counter)}
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        {/* <img src={logo} className="App-logo" alt="logo" /> */}
         <Counter />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
