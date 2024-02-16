@@ -114,7 +114,7 @@ xbrowser.runtime.onMessage.addListener(async (request: { type: string; message?:
       tabs.forEach(function (tab) {
         // Check if the tab's URL contains "localhost"
         if (tab.url && tab.url.includes("localhost")) {
-          console.log("sendingMessage tab match: ", { tab: tab.url });
+          // console.log("sendingMessage tab match: ", { tab: tab.url });
           sendMessageToTab(tab.id, {type: 'BACKGROUND_TO_LOCALHOST_CS', message});
         }
       });
