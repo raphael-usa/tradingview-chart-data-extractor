@@ -65,7 +65,7 @@ export const chartSlice = createSlice({
           item, seriesCandleData: [], seriesSymbolInfoName_sds_sym_x, seriesCandleInterval 
         }
       };
-      state.symbolInfo_sds_sym_x[seriesName] = {};
+      // state.symbolInfo_sds_sym_x[seriesName] = {};
 
       console.log("state modifySeries, item: ", { item });
 
