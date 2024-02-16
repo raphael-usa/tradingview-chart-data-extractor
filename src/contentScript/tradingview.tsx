@@ -32,81 +32,20 @@ const root = createRoot(appContainer); // createRoot(container!) if you use Type
 
 
 const TradingViewContentScript = () => {
-    const [messageTestResponse, setMessageTestResponse] = useState('');
-    const [fullAppState, setFullAppState] = useState({});
 
-    // const sendMessage = () => {
-    //     let timeNow = formatCurrentTime();
-    //     console.log("sendMessage ", { timeNow });
-    //     if (typeof browser !== 'undefined') {
-    //         // Firefox
-    //         console.log('Extension is running in Firefox');
-    //         browser.runtime.sendMessage({ type: "MESSAGE_TEST", data: { timeNow, more: "data" } }, (response) => {
-    //             if (response) {
-    //                 console.log({ response });
-    //                 setMessageTestResponse(JSON.stringify(response));
-    //             } else {
-    //                 console.error("sendMessage MESSAGE_TEST error, no response");
-    //             }
-    //         });
-    //     } else if (typeof chrome !== 'undefined') {
-    //         // Chrome
-    //         console.log('Extension is running in Chrome');
-    //         chrome.runtime.sendMessage({ type: "MESSAGE_TEST", data: { timeNow, more: "data" } }, (response) => {
-    //             if (response) {
-    //                 console.log({ response });
-    //                 setMessageTestResponse(JSON.stringify(response));
-    //             } else {
-    //                 console.error("sendMessage MESSAGE_TEST error, no response");
-    //             }
-    //         });
-    //     } else {
-    //         console.error('Unable to determine the browser');
-    //     }
-    // }
+    // const injectJS = () => {
+    //     console.log("injectJS");
+    //     console.log({ window });
+    //     xbrowser.runtime.sendMessage({ type: "INJECT_JS_TRADINGVIEW" }, (response?: any) => {
+    //         if (response) {
+    //             console.log({ response });
+    //             // setFullAppState(response);
 
-    // const getAppStateFull = () => {
-    //     if (typeof browser !== 'undefined') {
-    //         // Firefox
-    //         console.log('Extension is running in Firefox');
-    //         browser.runtime.sendMessage({ type: "APP_STATE_FULL" }, (response) => {
-    //             if (response) {
-    //                 console.log({ response });
-    //                 setFullAppState(response);
-    //             } else {
-    //                 console.error("sendMessage APP_STATE_FULL error, no response");
-    //             }
-    //         });
-    //     } else if (typeof chrome !== 'undefined') {
-    //         // Chrome
-    //         console.log('Extension is running in Chrome');
-    //         chrome.runtime.sendMessage({ type: "APP_STATE_FULL" }, (response) => {
-    //             if (response) {
-    //                 console.log({ response });
-    //                 setFullAppState(response);
-
-    //             } else {
-    //                 console.error("sendMessage APP_STATE_FULL error, no response");
-    //             }
-    //         });
-    //     } else {
-    //         console.error('Unable to determine the browser');
-    //     }
+    //         } else {
+    //             console.error("sendMessage APP_STATE_FULL error, no response");
+    //         }
+    //     });
     // };
-
-    const injectJS = () => {
-        console.log("injectJS");
-        console.log({ window });
-        xbrowser.runtime.sendMessage({ type: "INJECT_JS_TRADINGVIEW" }, (response?: any) => {
-            if (response) {
-                console.log({ response });
-                // setFullAppState(response);
-
-            } else {
-                console.error("sendMessage APP_STATE_FULL error, no response");
-            }
-        });
-    };
 
     const disconnectWS = () => {
         console.log("send disconnectWS message to window");
@@ -124,7 +63,7 @@ const TradingViewContentScript = () => {
         <React.Fragment>
             <FloatingMovableContainer bottom={2} right={2} >
                 <div style={{ maxWidth: '400px' }}>
-                    <h1>Hello TradingViewContentScript</h1>
+                    <h1>Hello TradingViewContentScript</h1> 
                     <hr />
 
                     <button onClick={disconnectWS}><h3>Disconnect WebSocket</h3></button>

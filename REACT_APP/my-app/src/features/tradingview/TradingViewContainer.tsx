@@ -49,7 +49,8 @@ export default function TradingviewContainer() {
                 dispatch(duMessage(item));
                 break;
               default:
-                console.debug(timeNow, "xxx not handled: ", { m, item });
+                // console.debug(timeNow, "xxx_not_handled: ", { m, item }); 
+                break;
             }
           }
           else {
@@ -80,14 +81,16 @@ export default function TradingviewContainer() {
                   dispatch(createSeries(item));
                   break;
                 default:
-                  console.debug(timeNow, "OUTGOING xxx not handled: ", { m, item });
+                  // console.debug(timeNow, "OUTGOING xxx_not_handled: ", { m, item });
+                  break;
               }
             } else {
               console.debug("_handleOutgoingMessages, message->item: NO M", { item });
             }
           }
           else {
-            console.debug("~ message, IGNORE ?, ", { value });
+            // console.debug("~ message, IGNORE xxx_not_handled ?, ", { value });
+            return null;
           }
 
         } catch (error) {
