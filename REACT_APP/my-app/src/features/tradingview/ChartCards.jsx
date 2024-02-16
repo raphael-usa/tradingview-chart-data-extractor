@@ -17,6 +17,161 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import Button from '@mui/material/Button';
 
+
+
+// import * as React from 'react';
+// import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+
+import Box from '@mui/material/Box';
+import { DataGrid } from '@mui/x-data-grid';
+
+const columns = [
+    { field: 'id', type: 'text', headerName: 'timestamp', width: 120 },
+    { field: 'v', type: 'number', headerName: 'volume', width: 120 },
+    { field: 'o', type: 'number', headerName: 'open', width: 120 },
+    { field: 'h', type: 'number', headerName: 'high', width: 120 },
+    { field: 'l', type: 'number', headerName: 'low', width: 120 },
+    { field: 'c', type: 'number', headerName: 'close', width: 120 },
+    //   {
+    //     field: 'fullName',
+    //     headerName: 'Full name',
+    //     description: 'This column has a value getter and is not sortable.',
+    //     sortable: false,
+    //     width: 160,
+    //     valueGetter: (params) =>
+    //       `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+    //   },
+];
+
+const demoRows = [
+    { id: 1, v: 8123.3, o: 123, h: 123.5, l: 100, c: 111.5 },
+    { id: 22222, v: 8123.3, o: 123, h: 123.5, l: 100, c: 111.5 },
+    { id: 1567567, v: 8123.3, o: 123, h: 123.5, l: 100, c: 111.5 },
+    { id: 12314321, v: 8123.3, o: 123, h: 123.5, l: 100, c: 111.5 },
+    { id: 76745451, v: 8123.3, o: 123, h: 123.5, l: 100, c: 111.5 },
+    { id: 111111, v: 8123.3, o: 123, h: 123.5, l: 100, c: 111.5 },
+    { id: 1, v: 8123.3, o: 123, h: 123.5, l: 100, c: 111.5 },
+];
+
+function DataGridDemo({ candleData }) {
+    const [rows, setRows] = React.useState([]);
+    
+    React.useEffect(() => {
+        if (candleData) {
+            let newRows = [];
+            console.log("DataGridDemo useEffect", { candleData });
+            candleData.forEach(lists => {
+                lists.forEach(list => {
+                    let item = list.v;
+                    let timestamp = item[0];
+                    let o = item[1];
+                    let h = item[2];
+                    let l = item[3];
+                    let c = item[4];
+                    let v = item[5];
+                    let newObj = {id:timestamp, v, o, h, l, c};
+                    newRows.push(newObj);
+                });
+            });
+            console.log({newRows});
+            setRows(newRows);
+        }
+    }, [candleData]);
+
+    return (
+        <Box sx={{ height: 400, width: '100%' }}>
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                initialState={{
+                    pagination: {
+                        paginationModel: {
+                            pageSize: 100,
+                        },
+                    },
+                }}
+                pageSizeOptions={[5]}
+                checkboxSelection
+                disableRowSelectionOnClick
+            />
+        </Box>
+    );
+}
+
+function ScrollDialog(props) {
+    const [open, setOpen] = React.useState(false);
+    const [scroll, setScroll] = React.useState('paper');
+
+    const handleClickOpen = (scrollType) => () => {
+        setOpen(true);
+        setScroll(scrollType);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const descriptionElementRef = React.useRef(null);
+    React.useEffect(() => {
+        if (open) {
+            const { current: descriptionElement } = descriptionElementRef;
+            if (descriptionElement !== null) {
+                descriptionElement.focus();
+            }
+        }
+    }, [open]);
+
+    return (
+        <React.Fragment>
+            <Button onClick={handleClickOpen('paper')}>show ChartData</Button>
+            {/* <Button onClick={handleClickOpen('body')}>scroll=body</Button> */}
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                scroll={scroll}
+                aria-labelledby="scroll-dialog-title"
+                aria-describedby="scroll-dialog-description"
+                fullWidth={true}
+                maxWidth="lg"
+            >
+                <DialogTitle id="scroll-dialog-title">{props.chartKey}</DialogTitle>
+                <DialogContent dividers={scroll === 'paper'}>
+                    <DialogContentText
+                        id="scroll-dialog-description"
+                        ref={descriptionElementRef}
+                        tabIndex={-1}
+                    >
+                        duUpdates: {JSON.stringify(props.duUpdates)}<br />
+
+
+                        {/* {[...new Array(50)]
+                            .map(
+                                () => `abcking Cras mattis consectetur purus sit amet fermentum.
+Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
+                            )
+                            .join('\n')} */}
+                    </DialogContentText>
+                    <DataGridDemo candleData={props.candleData} />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose}>Subscribe</Button>
+                </DialogActions>
+            </Dialog>
+        </React.Fragment>
+    );
+}
+
+
+
 // const ExpandMore = styled((props) => {
 //     const { expand, ...other } = props;
 //     return <IconButton {...other} />;
@@ -74,16 +229,19 @@ export default function ChartCards({ chart_objs }) {
                                 <Typography variant="body2" color="text.secondary">
                                     {chartObj.key}
                                 </Typography>
-                                <hr/>
+                                <hr />
                                 show little candleData info here #TODO
                             </CardContent>
                             <CardActions disableSpacing>
-                                <Button onClick={() => {
+                                {/* <Button onClick={() => {
                                     showChartData(chartObj.key);
-                                }} variant="contained">View data #TODO toggle modal</Button>
-                                <IconButton aria-label="share">
+                                }} variant="contained">
+                                    View data #TODO toggle modal
+                                </Button> */}
+                                <ScrollDialog chartKey={chartObj.key} duUpdates={chartObj.duUpdates} candleData={chartObj.candleData} />
+                                {/* <IconButton aria-label="share">
                                     <ShareIcon />
-                                </IconButton>
+                                </IconButton> */}
                                 {/* <ExpandMore
                                     expand={expanded}
                                     onClick={handleExpandClick}
