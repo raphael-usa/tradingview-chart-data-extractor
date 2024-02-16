@@ -5,9 +5,11 @@ import {
 } from './chartSlice';
 
 import ChartCards from './ChartCards';
+import internal from 'stream';
 
 interface ChartObj {
     key?: string;
+    chartID?: string;
     full_name?: string;
     candleData?: any; // Assuming posts is an array of strings
     duUpdates?: any;
@@ -53,31 +55,32 @@ export default function ChartsInfoContainer() {
 
                                         let seriesCandleInterval = sx_data.seriesCandleInterval;
 
-                                        let sym_data = symbolInfos[seriesSymbolInfoName].data;
+                                        let sym_data = symbolInfos[name][seriesSymbolInfoName];
+                                        if (sym_data) {
+                                            let full_name = sym_data.data.full_name;
 
-                                        let full_name = sym_data.full_name;
+                                            let candleData = sx_data.seriesCandleData;
 
-                                        let candleData = sx_data.seriesCandleData;
+                                            let duUpdates = sx_data.duUpdates;
 
-                                        let duUpdates = sx_data.duUpdates;
+                                            if (duUpdates) {
+                                                let keys = Object.keys(duUpdates);
+                                                let latestDuUpdate = {};
 
-                                        if (duUpdates) {
-                                            let keys = Object.keys(duUpdates);
-                                            let latestDuUpdate = {};
-
-                                            if (duUpdates && keys.length > 0) {
-                                                let lastKey = keys[keys.length - 1];
-                                                latestDuUpdate = duUpdates[lastKey];
-                                            }
+                                                if (duUpdates && keys.length > 0) {
+                                                    let lastKey = keys[keys.length - 1];
+                                                    latestDuUpdate = duUpdates[lastKey];
+                                                }
 
 
-                                            let key = `${name}~>${sds_x}~>${sx}`;
-                                            let data_obj = { key, full_name, interval: seriesCandleInterval, candleData, duUpdates, latestDuUpdate };
-                                            x_array.push(data_obj);
-                                            console.log(`--->>> full_name:${full_name}`, { data_obj });
-                                            // console.log(`--->>> full_name:${full_name}, interval:${seriesCandleInterval}`, { sx_data, seriesSymbolInfoName, sym_data });    
+                                                let key = `${name}~>${sds_x}~>${sx}`;
+                                                let chartID = `${full_name}~>${seriesCandleInterval}`;
+                                                let data_obj = { key,chartID, full_name, interval: seriesCandleInterval, candleData, duUpdates, latestDuUpdate };
+                                                x_array.push(data_obj);
+                                                console.log(`--->>> full_name:${full_name}`, { data_obj });
+                                                // console.log(`--->>> full_name:${full_name}, interval:${seriesCandleInterval}`, { sx_data, seriesSymbolInfoName, sym_data });    
+                                            }    
                                         }
-
 
                                     } catch (error) {
                                         console.warn("ChartsInfoContainer  sx_keys.forEach error", { sx_data, symbolInfos, charts }, error);

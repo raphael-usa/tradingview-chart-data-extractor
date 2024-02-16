@@ -61,7 +61,7 @@ const demoRows = [
 
 function DataGridDemo({ candleData }) {
     const [rows, setRows] = React.useState([]);
-    
+
     React.useEffect(() => {
         if (candleData) {
             let newRows = [];
@@ -75,12 +75,22 @@ function DataGridDemo({ candleData }) {
                     let l = item[3];
                     let c = item[4];
                     let v = item[5];
-                    let newObj = {id:timestamp, v, o, h, l, c};
+                    let newObj = { id: timestamp, v, o, h, l, c };
                     newRows.push(newObj);
                 });
             });
-            console.log({newRows});
-            setRows(newRows);
+            // console.log({newRows});
+
+            const uniqueRows = Array.from(new Set(newRows.map(obj => obj.id))).map(id => {
+                return newRows.find(obj => obj.id === id);
+            });
+
+            if (uniqueRows.length !== newRows.length) {
+                console.warn("Duplicates existed and have been removed.");
+            }
+
+            console.log({uniqueRows});
+            setRows(uniqueRows);
         }
     }, [candleData]);
 
@@ -96,7 +106,7 @@ function DataGridDemo({ candleData }) {
                         },
                     },
                 }}
-                pageSizeOptions={[5]}
+                pageSizeOptions={[100]}
                 checkboxSelection
                 disableRowSelectionOnClick
             />
@@ -140,7 +150,7 @@ function ScrollDialog(props) {
                 fullWidth={true}
                 maxWidth="lg"
             >
-                <DialogTitle id="scroll-dialog-title">{props.chartKey}</DialogTitle>
+                <DialogTitle id="scroll-dialog-title">{props.chartKey} --- {props.chartID}</DialogTitle>
                 <DialogContent dividers={scroll === 'paper'}>
                     <DialogContentText
                         id="scroll-dialog-description"
@@ -238,7 +248,7 @@ export default function ChartCards({ chart_objs }) {
                                 }} variant="contained">
                                     View data #TODO toggle modal
                                 </Button> */}
-                                <ScrollDialog chartKey={chartObj.key} duUpdates={chartObj.duUpdates} candleData={chartObj.candleData} />
+                                <ScrollDialog chartKey={chartObj.key} chartID={chartObj.chartID} duUpdates={chartObj.duUpdates} candleData={chartObj.candleData} />
                                 {/* <IconButton aria-label="share">
                                     <ShareIcon />
                                 </IconButton> */}

@@ -30,16 +30,23 @@ export const chartSlice = createSlice({
       console.log("state createSeries, item: ", { item, seriesName, series_sds_x, seriesDataName_sx, seriesSymbolInfoName_sds_sym_x, seriesCandleInterval });
       state.charts[seriesName] = { ...state.charts[seriesName], [series_sds_x]: { [seriesDataName_sx]: { item, seriesCandleData: [], seriesSymbolInfoName_sds_sym_x, seriesCandleInterval } } };
 
+      state.symbolInfo_sds_sym_x[seriesName] = {};
+
     },
     symbolResolved: (state, action) => {
       let item = action.payload;
-      // let seriesName = item.p[0];
+      let seriesName = item.p[0];
       let seriesSymbolInfoName_sds_sym_x = item.p[1];
       let data = item.p[2];
 
       // let full_name = data.full_name;
 
-      state.symbolInfo_sds_sym_x[seriesSymbolInfoName_sds_sym_x] = {data};
+      // state.charts[seriesName].symbolInfo = {
+      //   ...state.charts[seriesName].symbolInfo,
+      //   [seriesSymbolInfoName_sds_sym_x]: {data}
+      // }
+
+      state.symbolInfo_sds_sym_x[seriesName][seriesSymbolInfoName_sds_sym_x] = {data};
       
       console.log("symbolResolved", { item });
 
@@ -57,7 +64,8 @@ export const chartSlice = createSlice({
         [seriesDataName_sx]: { 
           item, seriesCandleData: [], seriesSymbolInfoName_sds_sym_x, seriesCandleInterval 
         }
-      } 
+      };
+      state.symbolInfo_sds_sym_x[seriesName] = {};
 
       console.log("state modifySeries, item: ", { item });
 
