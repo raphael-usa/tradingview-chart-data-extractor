@@ -6,6 +6,8 @@ import './App.css';
 import { Provider, useSelector } from 'react-redux';
 import { RootState } from './app/store';
 
+import Container from '@mui/material/Container';
+
 import TradingviewContainer from './features/tradingview/TradingViewContainer';
 
 function App() {
@@ -13,11 +15,14 @@ function App() {
   return (
     <div className="App">
 
-      <TradingviewContainer />
+      <Container>
+        <TradingviewContainer />
+      </Container>
 
-      <hr /> <hr /> <hr />
-      counter redux state: {JSON.stringify(counter)}
-      <header className="App-header">
+      <Container>
+      <div className='ABC_second'>
+        <hr /> <hr /> <hr />
+        counter redux state: {JSON.stringify(counter)}
         {/* <img src={logo} className="App-logo" alt="logo" /> */}
         <Counter />
         <p>
@@ -61,7 +66,9 @@ function App() {
             React Redux
           </a>
         </span>
-      </header>
+      </div>
+      </Container>
+
     </div>
   );
 }

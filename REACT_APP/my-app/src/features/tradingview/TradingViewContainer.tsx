@@ -1,33 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import React, { useEffect } from 'react';
+import { useAppDispatch } from '../../app/hooks';
 import {
   createSeries,
   modifySeries,
   symbolResolved,
-  timescaleUpdate, duMessage, stateCharts, stateSymbolInfos
+  timescaleUpdate, duMessage
 } from './chartSlice';
 
 import { formatCurrentTimeHMS } from '../../utils/common';
 
+import ChartsInfoContainer from './ChartsInfoContainer';
 
 export default function TradingviewContainer() {
   const dispatch = useAppDispatch();
-  // const charts = useAppSelector(stateCharts);
 
   console.log(">>> LOADED TradingviewContainer");
-
-  // useEffect(() => {
-  //   let chart_names = Object.keys(charts);
-  //   if (charts && chart_names.length > 0) {
-  //     console.log(">>> useEffect Handling state changes...", { charts, chart_names });
-  //     chart_names.forEach(name => {
-  //       console.log(name);
-  //       let study_keys = Object.keys(charts[name]);
-  //       console.log({study_keys});
-  //     });
-  //   }
-
-  // }, [charts]);
 
   useEffect(() => {
     function handleMessageFromDOM(message?: any, isSend?: boolean) {
@@ -43,12 +30,6 @@ export default function TradingviewContainer() {
             let sds_1 = p1['sds_1'];
             switch (m) {
               case "timescale_update":
-                // if (sds_1) {
-                //   console.log('%c >>> timescale_update : ', 'background: yellow; color: black', timeNow, "YES-sds_1", { chart_ID, item });
-                // }
-                // else {
-                //   console.log('%c >>> timescale_update non sds_1 : ', 'background: yellow; color: red', timeNow, "NO-sds_1", { chart_ID, item });
-                // }
                 dispatch(timescaleUpdate(item));
                 break;
               case "series_completed":
@@ -65,10 +46,7 @@ export default function TradingviewContainer() {
                 dispatch(symbolResolved(item));
                 break;
               case "du":
-                // console.log(timeNow, ">>> DU_MESSAGE > ", { item });
-
                 dispatch(duMessage(item));
-
                 break;
               default:
                 console.debug(timeNow, "xxx not handled: ", { m, item });
@@ -167,116 +145,14 @@ export default function TradingviewContainer() {
     };
   });
 
-
-
-
   return (
-    <div>
+    <div style={{margin:"10px 10px"}}>
       HELLO YOU TRADINGVIEW Container
 
-      <ChartsInfo />
+      <ChartsInfoContainer />
 
     </div>
   );
 }
 
 
-function ChartsInfo() {
-  const charts = useAppSelector(stateCharts);
-  const symbolInfos = useAppSelector(stateSymbolInfos);
-
-  interface ChartObj {
-    key?: string;
-    full_name?: string;
-    candleData?: any; // Assuming posts is an array of strings
-    duUpdates?: any;
-    interval?: any;
-  }
-  const [chart_objs, setChart_objs] = useState<ChartObj[]>([]);
-
-  let chart_names = Object.keys(charts);
-  let symbolInfos_keys = Object.keys(symbolInfos);
-  console.log("ChartsInfo loaded? heres charts useAppSelector: ", { charts, chart_names });
-
-  useEffect(() => {
-    try {
-      if (charts && chart_names.length > 0 && symbolInfos_keys.length > 0) {
-        // console.log(">>> useEffect Handling state changes...", { charts, chart_names });
-        let x_array: any = [];
-        chart_names.forEach(name => {
-          let study_keys = Object.keys(charts[name]);
-          console.log({ study_keys });
-
-          if (study_keys && study_keys.length > 0) {
-            study_keys.forEach(sds_x => {
-              let item = charts[name][sds_x];
-              let sx_keys = Object.keys(item);
-              console.log({ item, name, sds_x, sx_keys });
-
-              if (sx_keys.length > 0) {
-                sx_keys.forEach(sx => {
-                  let sx_data = charts[name][sds_x][sx];
-
-                  try {
-                    let seriesSymbolInfoName = sx_data.seriesSymbolInfoName_sds_sym_x;
-                    let seriesCandleInterval = sx_data.seriesCandleInterval;
-
-                    let sym_data = symbolInfos[seriesSymbolInfoName].data;
-                    let full_name = sym_data.full_name
-
-                    let candleData = sx_data.seriesCandleData;
-                    let duUpdates = sx_data.duUpdates;
-
-                    let key = `${name}-${sds_x}-${sx}`;
-                    let data_obj = { key, full_name, interval: seriesCandleInterval, candleData, duUpdates };
-                    x_array.push(data_obj);
-                    console.log(`--->>> full_name:${full_name}`, { data_obj });
-                    // console.log(`--->>> full_name:${full_name}, interval:${seriesCandleInterval}`, { sx_data, seriesSymbolInfoName, sym_data });
-                  } catch (error) {
-                    console.warn("ChartsInfo  sx_keys.forEach error", { sx_data, symbolInfos, charts }, error);
-                  }
-
-                });
-              }
-
-            });
-
-          }
-        });
-        setChart_objs(x_array)
-      }
-    } catch (error) {
-      console.warn("ChartsInfo error: ", error);
-    }
-  }, [charts, symbolInfos]);
-
-
-
-
-
-  return (
-    <div>
-      <h2 style={{textDecorationLine:"underline"}}>ChartsInfo <button>Do something to all tickers</button></h2>
-      {chart_objs.length !== 0 && (
-        chart_objs.map((chartObj) => (
-          <div key={chartObj.key}>
-            <h4>Name: {chartObj.full_name}</h4>
-            <span><button>do something to ticker data</button></span>
-            <h4>Interval: {chartObj.interval}</h4>
-            <h4>key: {chartObj.key}</h4>
-            <ul style={{textAlign:"left"}}> candleData: array of lists: [[],[], ...]. <br/>
-              num of lists: {chartObj.candleData.length}
-              {chartObj.candleData.map((post?:any, index?:any) => (
-                <li key={index}>length of list: {post.length}  1st item in list: {JSON.stringify(post[0])}</li>
-              ))}
-              
-            </ul>
-            {JSON.stringify(chartObj.duUpdates)}
-            <hr />
-          </div>
-        ))
-      )}
-      {chart_objs.length === 0 && <p>No data available</p>}
-    </div>
-  );
-}

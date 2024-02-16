@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../app/store';
+// import { RootState } from '../../app/store';
 import { formatCurrentTimeHMS } from '../../utils/common';
 
 // import { produce } from 'immer';
@@ -30,6 +30,8 @@ export const chartSlice = createSlice({
       console.log("state createSeries, item: ", { item, seriesName, series_sds_x, seriesDataName_sx, seriesSymbolInfoName_sds_sym_x, seriesCandleInterval });
       state.charts[seriesName] = { ...state.charts[seriesName], [series_sds_x]: { [seriesDataName_sx]: { item, seriesCandleData: [], seriesSymbolInfoName_sds_sym_x, seriesCandleInterval } } };
 
+      state.symbolInfo_sds_sym_x[seriesName] = {};
+
     },
     symbolResolved: (state, action) => {
       let item = action.payload;
@@ -37,9 +39,14 @@ export const chartSlice = createSlice({
       let seriesSymbolInfoName_sds_sym_x = item.p[1];
       let data = item.p[2];
 
-      let full_name = data.full_name;
+      // let full_name = data.full_name;
 
-      state.symbolInfo_sds_sym_x[seriesSymbolInfoName_sds_sym_x] = {data};
+      // state.charts[seriesName].symbolInfo = {
+      //   ...state.charts[seriesName].symbolInfo,
+      //   [seriesSymbolInfoName_sds_sym_x]: {data}
+      // }
+
+      state.symbolInfo_sds_sym_x[seriesName][seriesSymbolInfoName_sds_sym_x] = {data};
       
       console.log("symbolResolved", { item });
 
@@ -52,27 +59,13 @@ export const chartSlice = createSlice({
       let seriesSymbolInfoName_sds_sym_x = item.p[3];
       let seriesCandleInterval = item.p[4];
 
-
-      // if (state.charts[name] && state.charts[name][sds]) {
-      //   // If the series already exists, merge the new data with the existing series
-      //   state.charts[name][sds][s] = { ...state.charts[name][sds][s], item, seriesCandleData: [] };
-      // } else {
-      //   // If the series doesn't exist, create a new one
-      //   state.charts[name] = {
-      //     ...state.charts[name],
-      //     [sds]: {
-      //       ...state.charts[name][sds],
-      //       [s]: { item, seriesCandleData: [] },
-      //     }
-      //   };
-      // }
-
       state.charts[seriesName][series_sds_x] = {
         ...state.charts[seriesName][series_sds_x],
         [seriesDataName_sx]: { 
           item, seriesCandleData: [], seriesSymbolInfoName_sds_sym_x, seriesCandleInterval 
         }
-      } 
+      };
+      state.symbolInfo_sds_sym_x[seriesName] = {};
 
       console.log("state modifySeries, item: ", { item });
 
@@ -107,18 +100,6 @@ export const chartSlice = createSlice({
         console.error("ERROR HERE IN timescaleUpdate reducer", error);
       }
 
-
-      // let sds_sym_x = item.p[1];
-      // let data = item.p[2];
-
-      // state.charts[name] = {
-      //   ...state.charts[name],
-      //   [sds_sym_x]: {
-      //     data: data
-      //   }
-      // }
-
-
     },
 
     duMessage: (state, action) => {
@@ -127,16 +108,16 @@ export const chartSlice = createSlice({
         let item = action.payload;
         let name = item.p[0];
         let p1 = item.p[1];
-        let numKeysP1 = Object.keys(p1).length;
+        // let numKeysP1 = Object.keys(p1).length;
         let sds_1 = p1['sds_1'];
 
         if (sds_1) {
           let studyName = sds_1['t'];
           let data = sds_1['s'][0]['v'];
           let timestamp = data[0];
-          let open = data[1];
-          let high = data[2];
-          let low = data[3];
+          // let open = data[1];
+          // let high = data[2];
+          // let low = data[3];
           let close = data[4];
           let volume = data[5];
 
@@ -167,21 +148,5 @@ export const { createSeries, modifySeries, symbolResolved, timescaleUpdate, duMe
 
 export const stateCharts = (state) => state.chart.charts;
 export const stateSymbolInfos = (state) => state.chart.symbolInfo_sds_sym_x;
-
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
-// export const selectCount = (state: RootState) => state.counter.value;
-
-// We can also write thunks by hand, which may contain both sync and async logic.
-// Here's an example of conditionally dispatching actions based on current state.
-// export const incrementIfOdd =
-//   (amount: number): AppThunk =>
-//     (dispatch, getState) => {
-//       const currentValue = selectCount(getState());
-//       if (currentValue % 2 === 1) {
-//         dispatch(incrementByAmount(amount));
-//       }
-//     };
 
 export default chartSlice.reducer;
